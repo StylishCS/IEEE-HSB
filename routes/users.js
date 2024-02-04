@@ -3,6 +3,8 @@ var router = express.Router();
 
 const multer = require("multer");
 const fileUpload = multer();
+const cloudinary = require("../utils/cloudinary");
+const streamifier = require('streamifier');
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -28,6 +30,7 @@ router.post("/test", fileUpload.single("image"), async (req, res) => {
       return res.status(200).json(result);
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).send(error);
   }
 });
