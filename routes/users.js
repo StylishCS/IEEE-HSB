@@ -8,7 +8,7 @@ router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
 
-router.post("/test", upload.single("image"), (req, res) => {
+router.post("/test", upload.single("image"), async (req, res) => {
   try {
     if (req.file) {
       let streamUpload = (req) => {
@@ -24,9 +24,8 @@ router.post("/test", upload.single("image"), (req, res) => {
         });
       };
       let result = await streamUpload(req);
-    return res
-      .status(200)
-      .json(result)
+      return res.status(200).json(result);
+    }
   } catch (error) {
     return res.status(500).send(error);
   }
