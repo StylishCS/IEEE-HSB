@@ -32,7 +32,7 @@ async function loginController(req, res) {
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
 }
-
+//test
 async function seed(req, res) {
   try {
     const user = new Team({
