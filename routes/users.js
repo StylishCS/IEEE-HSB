@@ -1,14 +1,15 @@
 var express = require("express");
 var router = express.Router();
 
-const upload = require("../utils/uploadImage");
+const multer = require("multer");
+const fileUpload = multer();
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
 
-router.post("/test", upload.single("image"), async (req, res) => {
+router.post("/test", fileUpload.single("image"), async (req, res) => {
   try {
     if (req.file) {
       let streamUpload = (req) => {
