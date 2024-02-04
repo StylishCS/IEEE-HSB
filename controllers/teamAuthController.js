@@ -23,9 +23,9 @@ async function loginController(req, res) {
     });
     const userWithoutPassword = { ...user };
     delete userWithoutPassword._doc.password;
+    res.setHeader("Set-Cookie", `jwt=${token}; Path=/; SameSite=None`);
     return res
       .status(200)
-      .setHeader("Set-Cookie", `jwt=${token}; Path=/; SameSite=None`)
       .json(userWithoutPassword._doc);
   } catch (error) {
     console.log(error);
