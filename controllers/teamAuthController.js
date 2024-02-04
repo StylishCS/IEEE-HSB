@@ -21,13 +21,16 @@ async function loginController(req, res) {
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE,
     });
+    const expirationTime = new Date();
+    expirationTime.setHours(expirationTime.getHours() + 2);
+    const formattedExpirationTime = expirationTime.toUTCString();
     const userWithoutPassword = { ...user };
     delete userWithoutPassword._doc.password;
     return res
       .status(200)
       .setHeader(
         "Set-Cookie",
-        `token=${token}; Path=/; HttpOnly; Secure; SameSite=None`
+        `token=${token}; Path=/; HttpOnly; Secure; SameSite=None; Expires=${formattedExpirationTime}`
       )
       .json(userWithoutPassword._doc);
   } catch (error) {
