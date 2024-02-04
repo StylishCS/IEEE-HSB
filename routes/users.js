@@ -9,9 +9,15 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/test", upload.single("image"), (req, res) => {
-  return res
-    .status(200)
-    .send("https://ieee-backend-06597876c603.herokuapp.com/" + req.file.filename);
+  try {
+    return res
+      .status(200)
+      .send(
+        "https://ieee-backend-06597876c603.herokuapp.com/" + req.file.filename
+      );
+  } catch (error) {
+    return res.status(500).send(error);
+  }
 });
 
 module.exports = router;
