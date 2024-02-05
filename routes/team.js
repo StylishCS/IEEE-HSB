@@ -1,9 +1,13 @@
 var express = require("express");
-const { loginController, seed } = require("../controllers/teamAuthController");
+const {
+  loginController,
+  refreshToken,
+  createTeamMember,
+} = require("../controllers/teamAuthController");
+const AdminPrivileges = require("../middlewares/isAdmin");
 var router = express.Router();
 
-/* GET home page. */
 router.post("/login", loginController);
-router.get("/seed", seed);
-
+router.get("/refreshToken", AdminPrivileges, refreshToken);
+router.post("/createTeamMember", AdminPrivileges, createTeamMember);
 module.exports = router;
