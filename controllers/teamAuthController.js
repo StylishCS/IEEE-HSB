@@ -58,6 +58,21 @@ async function returnAllUsers(req, res) {
   }
 }
 
+async function getChairmans(req, res) {
+  try {
+    const chairmen = await Team.find({ role: "Chairman" });
+
+    if (!chairmen || chairmen.length === 0) {
+      return res.status(404).json("No chairmen found");
+    }
+
+    return res.status(200).json({ status: "success", data: chairmen });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json("INTERNAL SERVER ERROR");
+  }
+}
+
 async function createTeamMember(req, res) {
   try {
     // req.body => name, email, role, committee
@@ -150,9 +165,54 @@ async function refreshToken(req, res) {
   }
 }
 
+async function getDirectors(req, res) {
+  try {
+    const directors = await Team.find({ role: "Director" });
+
+    if (!directors || directors.length === 0) {
+      return res.status(404).json("No directors found");
+    }
+
+    return res.status(200).json({ status: "success", data: directors });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      let errors = {};
+      Object.keys(error.errors).forEach((key) => {
+        errors[key] = error.errors[key].message;
+      });
+      return res.status(400).send(errors);
+    }
+    return res.status(500).json("INTERNAL SERVER ERROR");
+  }
+}
+
+async function getVolunteers(req, res) {
+  try {
+    const volunteers = await Team.find({ role: "Volunteer" });
+
+    if (!volunteers || volunteers.length === 0) {
+      return res.status(404).json("No volunteers found");
+    }
+
+    return res.status(200).json({ status: "success", data: volunteers });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      let errors = {};
+      Object.keys(error.errors).forEach((key) => {
+        errors[key] = error.errors[key].message;
+      });
+      return res.status(400).send(errors);
+    }
+    return res.status(500).json("INTERNAL SERVER ERROR");
+  }
+}
+
 module.exports = {
   loginController,
   refreshToken,
   createTeamMember,
   returnAllUsers,
+  getChairmans,
+  getDirectors,
+  getVolunteers
 };

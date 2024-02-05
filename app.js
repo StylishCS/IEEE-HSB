@@ -9,6 +9,9 @@ const cors = require("cors");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var teamRouter = require("./routes/team");
+var sloganRouter = require("./routes/slogan");
+var videosRouter = require("./routes/videos");
+
 require("dotenv").config();
 
 //database setup
@@ -24,7 +27,7 @@ var app = express();
 app.use(
   cors({
     origin: ["http://localhost:3000"],
-    methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
@@ -44,6 +47,8 @@ app.use(express.static(path.join(__dirname, "uploads")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/team", teamRouter);
+app.use("/slogan", sloganRouter);
+app.use("/videos", videosRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
