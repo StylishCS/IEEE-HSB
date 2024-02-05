@@ -3,15 +3,15 @@ const { Team } = require("../models/Team");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const ejs = require("ejs");
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 
 async function loginController(req, res) {
   try {
     if (!req.body.email || !req.body.password) {
       return res.status(400).json("Invalid Credentials");
     }
-    if(!req.params.role){
+    if (!req.params.role) {
       return res.status(400).json("Please select your role first");
     }
     const user = await Team.findOne({ email: req.body.email });
@@ -74,6 +74,9 @@ async function createTeamMember(req, res) {
     //     .status(400)
     //     .json("Please enter email, name, role and committee Properly.");
     // }
+    // if (!req.body.email) {
+    //   return res.status(400).json("Email Should Be Sent.");
+    // }
     let user = await Team.findOne({ email: req.body.email });
     if (user) {
       return res.status(400).json("User already exist");
@@ -86,6 +89,7 @@ async function createTeamMember(req, res) {
       role: req.body.role,
       committee: req.body.committee,
     });
+    await user.save();
     const data = {
       name: user.name,
       email: user.email,
@@ -117,9 +121,8 @@ async function createTeamMember(req, res) {
       html: modifiedEmailTemplate,
     };
     await transporter.sendMail(message).catch((err) => {
-      return res.status(400).json({ error: true, msg: "MAIL NOT SENT..." });
+      throw err;
     });
-    await user.save();
 
     const userWithoutPassword = { ...user };
     delete userWithoutPassword._doc.password;
@@ -135,7 +138,6 @@ async function createTeamMember(req, res) {
       });
       return res.status(400).send(errors);
     }
-    console.log(error);
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
 }
