@@ -11,11 +11,14 @@ async function loginController(req, res) {
     if (!req.body.email || !req.body.password) {
       return res.status(400).json("Invalid Credentials");
     }
+    if(!req.params.role){
+      return res.status(400).json("Please select your role first");
+    }
     const user = await Team.findOne({ email: req.body.email });
     if (!user) {
       return res.status(404).json("Wrong Email or Password");
     }
-    if (user.role !== "Chairman") {
+    if (user.role !== req.params.role) {
       return res.status(401).json("FORBIDDEN");
     }
     const valid = await bcrypt.compare(req.body.password, user.password);
