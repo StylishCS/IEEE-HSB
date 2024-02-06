@@ -37,7 +37,7 @@ async function loginController(req, res) {
       .status(200)
       .setHeader(
         "Set-Cookie",
-        `token=${token}; Path=/; Secure; SameSite=None; Expires=${formattedExpirationTime}`
+        `token=${token}; Path=/; Expires=${formattedExpirationTime}`
       )
       .json(userWithoutPassword._doc);
   } catch (error) {
