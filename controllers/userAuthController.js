@@ -225,6 +225,9 @@ async function loginController(req, res) {
     if (!valid) {
       return res.status(404).json("Wrong Email or Password");
     }
+    if (!user.verified) {
+      return res.status(401).json("Account is not verified");
+    }
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE,
     });
