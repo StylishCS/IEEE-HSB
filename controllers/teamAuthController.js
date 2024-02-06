@@ -159,7 +159,11 @@ async function createTeamMember(req, res) {
 
 async function refreshToken(req, res) {
   try {
-    return res.status(200).json(req.adminId);
+    const user = await Team.findById(req.adminId);
+    if(!user){
+      return res.status(404).json("not found");
+    }
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
@@ -188,21 +192,36 @@ async function getDirectors(req, res) {
 
 async function getVolunteers(req, res) {
   try {
-    const volunteers = await Team.find({ role: "Volunteer" });
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
 
-    if (!volunteers || volunteers.length === 0) {
-      return res.status(404).json("No volunteers found");
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    const results = {};
+
+    if (endIndex < (await Team.countDocuments({role: "Volunteer"}).exec())) {
+      results.next = {
+        page: page + 1,
+        limit: limit,
+      };
     }
 
-    return res.status(200).json({ status: "success", data: volunteers });
+    if (startIndex > 0) {
+      results.previous = {
+        page: page - 1,
+        limit: limit,
+      };
+    }
+    results.results = await Team.find({ role: "Volunteer" })
+      .limit(limit)
+      .skip(startIndex)
+      .exec();
+    if (!results.results) {
+      return res.status(404).json("No Data Found");
+    }
+    return res.status(200).json(results);
   } catch (error) {
-    if (error.name === "ValidationError") {
-      let errors = {};
-      Object.keys(error.errors).forEach((key) => {
-        errors[key] = error.errors[key].message;
-      });
-      return res.status(400).send(errors);
-    }
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
 }

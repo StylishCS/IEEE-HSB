@@ -22,18 +22,8 @@ exports.addSlogan = async (req, res) => {
 
 exports.getSlogans = async (req, res) => {
   try {
-    const solgans = await Slogan.find();
-    if (!solgans) return res.status(404).json({ msg: "No Slogans Found" });
-
-    return res.status(200).json({ status: "success", data: solgans });
+    return res.status(200).json(res.paginatedResults);
   } catch (error) {
-    if (error.name === "ValidationError") {
-      let errors = {};
-      Object.keys(error.errors).forEach((key) => {
-        errors[key] = error.errors[key].message;
-      });
-      return res.status(400).send(errors);
-    }
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
 };
