@@ -27,7 +27,6 @@ async function AdminPrivileges(req, res, next) {
     next();
   } catch (error) {
     console.log("flag5");
-    console.log(error)
     return res.status(401).json("FORBIDDEN");
   }
 }
