@@ -178,6 +178,8 @@ async function refreshToken(req, res) {
       )
       .json(userWithoutPassword._doc);
   } catch (error) {
+    console.log("flag controller")
+    console.log(error)
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
 }
