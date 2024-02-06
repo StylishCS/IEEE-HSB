@@ -33,6 +33,7 @@ async function loginController(req, res) {
     const formattedExpirationTime = expirationTime.toUTCString();
     const userWithoutPassword = { ...user };
     delete userWithoutPassword._doc.password;
+    userWithoutPassword._doc.token = token;
     return res
       .status(200)
       .setHeader(
@@ -163,7 +164,19 @@ async function refreshToken(req, res) {
     if(!user){
       return res.status(404).json("not found");
     }
-    return res.status(200).json(user);
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE,
+    });
+    const userWithoutPassword = { ...user };
+    delete userWithoutPassword._doc.password;
+    userWithoutPassword._doc.token = token;
+    return res
+      .status(200)
+      .setHeader(
+        "Set-Cookie",
+        `token=${token}; Path=/; HttpOnly; Secure; SameSite=None; Expires=${formattedExpirationTime}`
+      )
+      .json(userWithoutPassword._doc);
   } catch (error) {
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
