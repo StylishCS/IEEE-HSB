@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const { Team } = require("../models/Team");
+const { User } = require("../models/User");
 
-async function AdminPrivileges(req, res, next) {
+async function UserPrivileges(req, res, next) {
   try {
     if (!req.header("Authorization")) {
       return res.status(401).json("FORBIDDEN");
@@ -12,18 +12,15 @@ async function AdminPrivileges(req, res, next) {
       return res.status(401).json("FORBIDDEN");
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const admin = await Team.findById(decoded._id);
-    if (!admin) {
+    const user = await User.findById(decoded._id);
+    if (!user) {
       return res.status(401).json("FORBIDDEN");
     }
-    if (admin.role !== "Chairman") {
-      return res.status(401).json("FORBIDDEN");
-    }
-    req.adminId = decoded._id;
+    req.userId = decoded._id;
     next();
   } catch (error) {
     return res.status(401).json("FORBIDDEN");
   }
 }
 
-module.exports = AdminPrivileges;
+module.exports = UserPrivileges;
