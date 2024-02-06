@@ -172,10 +172,6 @@ async function refreshToken(req, res) {
     userWithoutPassword._doc.token = token;
     return res
       .status(200)
-      .setHeader(
-        "Set-Cookie",
-        `token=${token}; Path=/; HttpOnly; Secure; SameSite=None; Expires=${formattedExpirationTime}`
-      )
       .json(userWithoutPassword._doc);
   } catch (error) {
     console.log("flag controller")
