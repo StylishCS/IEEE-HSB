@@ -26,7 +26,8 @@ mongoose
 var app = express();
 
 // Enable CORS for all routes
-app.use(cors());
+app.use(cors()); // Enable CORS for all routes
+app.options("*", cors());
 
 // view engine setup
 app.set("views", path.join(dirname, "views")); // Fix the typo in dirname
