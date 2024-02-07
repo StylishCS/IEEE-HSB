@@ -19,7 +19,7 @@ router.get("/", paginatedResults(Partner), partner.getPartners);
 
 router
   .route("/:id")
-  .patch(partner.updatePartner)
+  .patch(fileUpload.single("image"), uploadToCloudinary, partner.updatePartner)
   .delete(partner.deletePartner)
   .get(partner.getPartner);
 
