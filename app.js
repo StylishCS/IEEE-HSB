@@ -25,23 +25,18 @@ mongoose
 
 var app = express();
 
-app.use(cors()); // Enable CORS for all routes
-app.options("*", cors());
-app.use(cors({
-  origin: 'https://ieeehsb.software',
-  credentials: true
-}));
-
+// Enable CORS for all routes
+app.use(cors());
 
 // view engine setup
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(dirname, "views")); // Fix the typo in dirname
 app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
 
 app.use("/", indexRouter);
