@@ -33,6 +33,7 @@ app.use(
     credentials: true,
   })
 );
+app.options("*", cors());
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
