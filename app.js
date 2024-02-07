@@ -27,6 +27,11 @@ var app = express();
 
 app.use(cors()); // Enable CORS for all routes
 app.options("*", cors());
+app.use(cors({
+  origin: 'https://ieeehsb.software',
+  credentials: true
+}));
+
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
