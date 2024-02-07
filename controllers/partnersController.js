@@ -39,8 +39,16 @@ exports.getPartners = async (req, res) => {
 
 exports.updatePartner = async (req, res) => {
   try {
-    const partner = await Partner.findById({ _id: req.params.id });
+    const partner = await Partner.findById(req.params.id);
     if (!partner) return res.status(404).json({ msg: "Not Found" });
+    console.log(partner.image.public_id);
+
+    if (req.file) {
+      req.body.image = req.cloudinaryResult.secure_url;
+      const publicId = partner.image.split("/").pop().split(".")[0];
+      const oldImage = await cloudinary.uploader.destroy(publicId);
+      console.log(oldImage);
+    }
 
     await Partner.updateOne({ _id: req.params.id }, req.body);
     return res.status(200).json({ msg: "Updated Successfully" });
