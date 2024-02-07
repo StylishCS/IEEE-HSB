@@ -14,6 +14,12 @@ const videosSchema = new mongoose.Schema(
       minLength: 2,
       maxLength: 255,
     },
+    tag: {
+      type: String,
+      required : true,
+      minLength: 2,
+      maxLength: 255,
+    }
   },
   { timestamps: true }
 );

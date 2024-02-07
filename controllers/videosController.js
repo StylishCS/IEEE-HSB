@@ -5,6 +5,7 @@ exports.addVideo = async (req, res) => {
     let video = new Videos({
       body: req.body.body,
       season: req.body.season,
+      tag: req.body.tag
     });
     await video.save();
     return res.status(200).json({ msg: "Video added successfully" });
