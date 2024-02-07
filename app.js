@@ -27,7 +27,7 @@ var app = express();
 
 app.use(
   cors({
-    origin: ["https://ieeehsb.software"],
+    origin: ["https://ieeehsb.software", "http://localhost:3000"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
