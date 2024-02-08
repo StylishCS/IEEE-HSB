@@ -1,21 +1,23 @@
-const { Partner } = require("../models/partners");
+const { Testimonial } = require("../models/testimonials");
 const cloudinary = require("../utils/cloudinary");
 
-exports.addPartner = async (req, res) => {
+exports.addTestimonial = async (req, res) => {
   try {
     if (!req.cloudinaryResult) {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    const partner = new Partner({
+    const testimonial = new Testimonial({
       name: req.body.name,
       image: req.cloudinaryResult.secure_url,
-      page_link: req.body.page_link,
+      lastPosition: req.body.lastPosition,
+      season: req.body.season,
+      comment: req.body.comment,
     });
 
-    await partner.save();
+    await testimonial.save();
 
-    return res.status(200).json({ msg: "Partner added successfully" });
+    return res.status(200).json({ msg: "Comment added successfully" });
   } catch (error) {
     if (error.name === "ValidationError") {
       let errors = {};
@@ -29,7 +31,7 @@ exports.addPartner = async (req, res) => {
   }
 };
 
-exports.getPartners = async (req, res) => {
+exports.getTestimonials = async (req, res) => {
   try {
     return res.status(200).json(res.paginatedResults);
   } catch (error) {
@@ -37,20 +39,18 @@ exports.getPartners = async (req, res) => {
   }
 };
 
-exports.updatePartner = async (req, res) => {
+exports.updateTestimonial = async (req, res) => {
   try {
-    const partner = await Partner.findById(req.params.id);
-    if (!partner) return res.status(404).json({ msg: "Not Found" });
-    console.log(partner.image.public_id);
+    const testimonial = await Testimonial.findById(req.params.id);
+    if (!testimonial) return res.status(404).json({ msg: "Not Found" });
 
     if (req.file) {
       req.body.image = req.cloudinaryResult.secure_url;
-      const publicId = partner.image.split("/").pop().split(".")[0];
-      const oldImage = await cloudinary.uploader.destroy(publicId);
-      console.log(oldImage);
+      const publicId = testimonial.image.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(publicId);
     }
 
-    await Partner.updateOne({ _id: req.params.id }, req.body);
+    await Testimonial.updateOne({ _id: req.params.id }, req.body);
     return res.status(200).json({ msg: "Updated Successfully" });
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -65,13 +65,13 @@ exports.updatePartner = async (req, res) => {
   }
 };
 
-exports.deletePartner = async (req, res) => {
+exports.deleteTestimonial = async (req, res) => {
   try {
-    const partner = await Partner.findById({ _id: req.params.id });
-    if (!partner) return res.status(404).json({ msg: "Not Found" });
-    const publicId = partner.image.split("/").pop().split(".")[0];
+    const testimonial = await Testimonial.findById({ _id: req.params.id });
+    if (!testimonial) return res.status(404).json({ msg: "Not Found" });
+    const publicId = testimonial.image.split("/").pop().split(".")[0];
     await cloudinary.uploader.destroy(publicId);
-    await Partner.deleteOne({ _id: req.params.id });
+    await Testimonial.deleteOne({ _id: req.params.id });
     return res.status(200).json({ msg: "Deleted Successfully" });
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -86,11 +86,11 @@ exports.deletePartner = async (req, res) => {
   }
 };
 
-exports.getPartner = async (req, res) => {
+exports.getTestimonial = async (req, res) => {
   try {
-    const partner = await Partner.findById({ _id: req.params.id });
-    if (!partner) return res.status(404).json({ msg: "Not Found" });
-    return res.status(200).json({ status: "success", data: partner });
+    const testimonial = await Testimonial.findById({ _id: req.params.id });
+    if (!testimonial) return res.status(404).json({ msg: "Not Found" });
+    return res.status(200).json({ status: "success", data: testimonial });
   } catch (error) {
     if (error.name === "ValidationError") {
       let errors = {};
