@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const ejs = require("ejs");
 const path = require("path");
 const fs = require("fs");
+const cloudinary = require("../utils/cloudinary");
 
 async function loginController(req, res) {
   try {
@@ -34,9 +35,7 @@ async function loginController(req, res) {
     const userWithoutPassword = { ...user };
     delete userWithoutPassword._doc.password;
     userWithoutPassword._doc.token = token;
-    return res
-      .status(200)
-      .json(userWithoutPassword._doc);
+    return res.status(200).json(userWithoutPassword._doc);
   } catch (error) {
     console.log(error);
     return res.status(500).json("INTERNAL SERVER ERROR");
@@ -157,7 +156,7 @@ async function createTeamMember(req, res) {
 async function refreshToken(req, res) {
   try {
     const user = await Team.findById(req.adminId);
-    if(!user){
+    if (!user) {
       return res.status(404).json("not found");
     }
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
@@ -166,12 +165,10 @@ async function refreshToken(req, res) {
     const userWithoutPassword = { ...user };
     delete userWithoutPassword._doc.password;
     userWithoutPassword._doc.token = token;
-    return res
-      .status(200)
-      .json(userWithoutPassword._doc);
+    return res.status(200).json(userWithoutPassword._doc);
   } catch (error) {
-    console.log("flag controller")
-    console.log(error)
+    console.log("flag controller");
+    console.log(error);
     return res.status(500).json("INTERNAL SERVER ERROR");
   }
 }
@@ -207,7 +204,7 @@ async function getVolunteers(req, res) {
 
     const results = {};
 
-    if (endIndex < (await Team.countDocuments({role: "Volunteer"}).exec())) {
+    if (endIndex < (await Team.countDocuments({ role: "Volunteer" }).exec())) {
       results.next = {
         page: page + 1,
         limit: limit,
@@ -233,6 +230,35 @@ async function getVolunteers(req, res) {
   }
 }
 
+async function updateMemberController(req, res) {
+  try {
+    if(req.body.password){
+      req.body.password = await bcrypt.hash(req.body.password, 10);
+    }
+    const user = await Team.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json("User not found");
+    }
+    if (req.file) {
+      req.body.image = req.cloudinaryResult.secure_url;
+      const publicId = user.image.split("/").pop().split(".")[0];
+      const oldImage = await cloudinary.uploader.destroy(publicId);
+    }
+    await Team.updateOne({ _id: req.params.id }, req.body);
+    return res.status(200).json("Member Updated.");
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      let errors = {};
+      Object.keys(error.errors).forEach((key) => {
+        errors[key] = error.errors[key].message;
+      });
+      return res.status(400).send(errors);
+    }
+    console.log(error);
+    return res.status(500).json("INTERNAL SERVER ERROR");
+  }
+}
+
 module.exports = {
   loginController,
   refreshToken,
@@ -240,5 +266,6 @@ module.exports = {
   returnAllUsers,
   getChairmans,
   getDirectors,
-  getVolunteers
+  getVolunteers,
+  updateMemberController,
 };
