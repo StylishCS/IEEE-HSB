@@ -7,6 +7,7 @@ const partnerSchema = new mongoose.Schema(
       required: true,
       minLength: 2,
       maxLength: 255,
+      trim: true,
     },
     image: {
       type: String,
@@ -15,6 +16,7 @@ const partnerSchema = new mongoose.Schema(
         "https://res.cloudinary.com/hvd4lcwbb/image/upload/v1707073428/a6a7gpohbeczb0rtuavr.png",
       minLength: 2,
       maxLength: 255,
+      trim: true,
     },
     page_link: {
       type: String,
@@ -22,6 +24,7 @@ const partnerSchema = new mongoose.Schema(
       default: "N/A",
       minLength: 2,
       maxLength: 500,
+      trim: true,
     },
   },
   { timestamps: true }

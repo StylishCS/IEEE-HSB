@@ -1,8 +1,15 @@
 const mongoose = require("mongoose");
 
-const videosSchema = new mongoose.Schema(
+const achievementSchema = new mongoose.Schema(
   {
-    body: {
+    name: {
+      type: String,
+      required: true,
+      minLength: 2,
+      maxLength: 255,
+      trim: true,
+    },
+    image: {
       type: String,
       required: true,
       minLength: 2,
@@ -16,17 +23,10 @@ const videosSchema = new mongoose.Schema(
       maxLength: 255,
       trim: true,
     },
-    tag: {
-      type: String,
-      required: true,
-      minLength: 2,
-      maxLength: 255,
-      trim: true,
-    },
   },
   { timestamps: true }
 );
 
-const Videos = mongoose.model("Videos", videosSchema);
+const Achievement = mongoose.model("Achievement", achievementSchema);
 
-exports.Videos = Videos;
+exports.Achievement = Achievement;

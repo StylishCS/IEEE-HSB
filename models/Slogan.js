@@ -7,12 +7,14 @@ const sloganSchema = new mongoose.Schema(
       required: true,
       minLength: 2,
       maxLength: 255,
+      trim: true,
     },
     season: {
       type: String,
       required: true,
       minLength: 2,
       maxLength: 255,
+      trim: true,
     },
   },
   { timestamps: true }

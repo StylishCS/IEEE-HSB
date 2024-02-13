@@ -15,7 +15,6 @@ async function uploadToCloudinary(req, res, next) {
 
         streamifier.createReadStream(req.file.buffer).pipe(stream);
       });
-      console.log(result)
       // Attach Cloudinary result to the request object
       req.cloudinaryResult = result;
     }
