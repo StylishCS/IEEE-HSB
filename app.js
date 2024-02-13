@@ -13,6 +13,7 @@ var sloganRouter = require("./routes/slogan");
 var videosRouter = require("./routes/videos");
 var partnersRouter = require("./routes/partners");
 var testimonialsRouter = require("./routes/testimonials");
+var achievementsRouter = require("./routes/achievements");
 
 require("dotenv").config();
 
@@ -53,6 +54,7 @@ app.use("/slogan", sloganRouter);
 app.use("/videos", videosRouter);
 app.use("/partners", partnersRouter);
 app.use("/testimonials", testimonialsRouter);
+app.use("/achievements", achievementsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

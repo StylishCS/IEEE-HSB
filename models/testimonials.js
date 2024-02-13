@@ -7,6 +7,7 @@ const testimonialSchema = new mongoose.Schema(
       required: true,
       minLength: 2,
       maxLength: 255,
+      trim: true,
     },
     image: {
       type: String,
@@ -15,24 +16,28 @@ const testimonialSchema = new mongoose.Schema(
         "https://res.cloudinary.com/hvd4lcwbb/image/upload/v1707073428/a6a7gpohbeczb0rtuavr.png",
       minLength: 2,
       maxLength: 255,
+      trim: true,
     },
     lastPosition: {
       type: String,
       required: true,
       minLength: 2,
       maxLength: 500,
+      trim: true,
     },
     season: {
       type: String,
       required: true,
       minLength: 2,
       maxLength: 500,
+      trim: true,
     },
     comment: {
       type: String,
       required: true,
       minLength: 2,
       maxLength: 500,
+      trim: true,
     },
   },
   { timestamps: true }
