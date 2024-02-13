@@ -21,22 +21,16 @@ const testimonialSchema = new mongoose.Schema(
     lastPosition: {
       type: String,
       required: true,
-      minLength: 2,
-      maxLength: 500,
       trim: true,
     },
     season: {
       type: String,
       required: true,
-      minLength: 2,
-      maxLength: 500,
       trim: true,
     },
     comment: {
       type: String,
       required: true,
-      minLength: 2,
-      maxLength: 500,
       trim: true,
     },
   },
